@@ -289,20 +289,25 @@ function App() {
       setMessages(prev => [...prev, newMessage]);
       setInputText('');
       
-      // Update the message in the chat's message history
+      // Update active chat with new message
+      const updatedActiveChat = {
+        ...activeChat,
+        messages: [...activeChat.messages, newMessage],
+        lastMessage: newMessage.text,
+        timestamp: newMessage.timestamp
+      };
+      
+      setActiveChat(updatedActiveChat);
+      
+      // Update all chats
       const updatedChats = allChats.map(chat => {
         if (chat.id === activeChat.id) {
-          return {
-            ...chat,
-            messages: [...chat.messages, newMessage],
-            lastMessage: newMessage.text,
-            timestamp: newMessage.timestamp
-          };
+          return updatedActiveChat;
         }
         return chat;
       });
       
-      // Update filtered chats as well
+      // Update filtered chats
       setFilteredChats(prev => prev.map(chat => {
         const updatedChat = updatedChats.find(c => c.id === chat.id);
         return updatedChat || chat;
@@ -330,20 +335,25 @@ function App() {
         
         setMessages(prev => [...prev, responseMessage]);
         
-        // Update the response in the chat's message history
+        // Update active chat with response
+        const finalUpdatedActiveChat = {
+          ...updatedActiveChat,
+          messages: [...updatedActiveChat.messages, responseMessage],
+          lastMessage: responseMessage.text,
+          timestamp: responseMessage.timestamp
+        };
+        
+        setActiveChat(finalUpdatedActiveChat);
+        
+        // Update all chats with response
         const finalUpdatedChats = allChats.map(chat => {
           if (chat.id === activeChat.id) {
-            return {
-              ...chat,
-              messages: [...chat.messages, newMessage, responseMessage],
-              lastMessage: responseMessage.text,
-              timestamp: responseMessage.timestamp
-            };
+            return finalUpdatedActiveChat;
           }
           return chat;
         });
         
-        // Update filtered chats with response
+        // Update filtered chats
         setFilteredChats(prev => prev.map(chat => {
           const updatedChat = finalUpdatedChats.find(c => c.id === chat.id);
           return updatedChat || chat;
@@ -364,65 +374,105 @@ function App() {
   };
 
   const handleFileSelect = (file: File) => {
+    // Create a more detailed message based on file type
+    let messageText = '';
+    let messageType: 'text' | 'file' | 'image' = 'file';
+    
+    if (file.type.startsWith('image/')) {
+      messageText = `🖼️ ${file.name}`;
+      messageType = 'image';
+    } else if (file.type.startsWith('video/')) {
+      messageText = `🎥 ${file.name}`;
+    } else if (file.type.startsWith('audio/')) {
+      messageText = `🎵 ${file.name}`;
+    } else if (file.type.includes('pdf')) {
+      messageText = `📄 ${file.name}`;
+    } else if (file.type.includes('document') || file.type.includes('text')) {
+      messageText = `📝 ${file.name}`;
+    } else {
+      messageText = `📎 ${file.name}`;
+    }
+    
     const newMessage: Message = {
       id: Date.now(),
-      text: `📎 ${file.name}`,
+      text: messageText,
       sender: 'user',
       timestamp: new Date(),
-      type: 'file',
+      type: messageType,
       fileName: file.name,
       fileSize: `${(file.size / 1024).toFixed(1)} KB`
     };
     
     setMessages(prev => [...prev, newMessage]);
     
-    // Update the message in the chat's message history
+    // Update the active chat's messages
+    const updatedActiveChat = {
+      ...activeChat,
+      messages: [...activeChat.messages, newMessage],
+      lastMessage: messageText,
+      timestamp: newMessage.timestamp
+    };
+    
+    setActiveChat(updatedActiveChat);
+    
+    // Update the message in all chats
     const updatedChats = allChats.map(chat => {
       if (chat.id === activeChat.id) {
-        return {
-          ...chat,
-          messages: [...chat.messages, newMessage],
-          lastMessage: `📎 ${file.name}`,
-          timestamp: newMessage.timestamp
-        };
+        return updatedActiveChat;
       }
       return chat;
     });
     
-    // Update filtered chats
+    // Update filtered chats to reflect the change
     setFilteredChats(prev => prev.map(chat => {
       const updatedChat = updatedChats.find(c => c.id === chat.id);
       return updatedChat || chat;
     }));
     
-    // Simulate response
+    // Simulate a response after file upload
     setTimeout(() => {
+      const responses = [
+        "File received! Thanks for sharing 📁",
+        "Got it! Nice file 👍",
+        "Thanks for the upload! 📤",
+        "File looks good! ✅",
+        "Received successfully! 🎉"
+      ];
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      
       const responseMessage: Message = {
         id: Date.now() + 1,
-        text: "File received! Thanks for sharing 📁",
+        text: randomResponse,
         sender: 'other',
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, responseMessage]);
       
-      // Update response in chat history
+      // Update active chat with response
+      const finalUpdatedActiveChat = {
+        ...updatedActiveChat,
+        messages: [...updatedActiveChat.messages, responseMessage],
+        lastMessage: responseMessage.text,
+        timestamp: responseMessage.timestamp
+      };
+      
+      setActiveChat(finalUpdatedActiveChat);
+      
+      // Update all chats with the response
       const finalUpdatedChats = allChats.map(chat => {
         if (chat.id === activeChat.id) {
-          return {
-            ...chat,
-            messages: [...chat.messages, newMessage, responseMessage],
-            lastMessage: responseMessage.text,
-            timestamp: responseMessage.timestamp
-          };
+          return finalUpdatedActiveChat;
         }
         return chat;
       });
       
+      // Update filtered chats with response
       setFilteredChats(prev => prev.map(chat => {
         const updatedChat = finalUpdatedChats.find(c => c.id === chat.id);
         return updatedChat || chat;
       }));
-    }, 1500);
+    }, 1000 + Math.random() * 1000);
   };
 
   const handlePlusClick = () => {
@@ -439,19 +489,25 @@ function App() {
     
     setMessages(prev => [...prev, newMessage]);
     
-    // Update the message in the chat's message history
+    // Update active chat
+    const updatedActiveChat = {
+      ...activeChat,
+      messages: [...activeChat.messages, newMessage],
+      lastMessage: newMessage.text,
+      timestamp: newMessage.timestamp
+    };
+    
+    setActiveChat(updatedActiveChat);
+    
+    // Update all chats
     const updatedChats = allChats.map(chat => {
       if (chat.id === activeChat.id) {
-        return {
-          ...chat,
-          messages: [...chat.messages, newMessage],
-          lastMessage: newMessage.text,
-          timestamp: newMessage.timestamp
-        };
+        return updatedActiveChat;
       }
       return chat;
     });
     
+    // Update filtered chats
     setFilteredChats(prev => prev.map(chat => {
       const updatedChat = updatedChats.find(c => c.id === chat.id);
       return updatedChat || chat;

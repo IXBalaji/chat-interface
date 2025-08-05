@@ -20,8 +20,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, onClose }) => {
     const file = e.target.files?.[0];
     if (file) {
       onFileSelect(file);
-      onClose();
     }
+    // Reset the input so the same file can be selected again
+    e.target.value = '';
   };
 
   const fileTypes = [
