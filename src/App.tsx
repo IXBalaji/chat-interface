@@ -374,69 +374,51 @@ function App() {
   };
 
   const handleFileSelect = (file: File) => {
-    // Create a more detailed message based on file type
+    console.log('File selected:', file.name, file.type);
+    
+    // Create message text based on file type
     let messageText = '';
-    let messageType: 'text' | 'file' | 'image' = 'file';
-    
     if (file.type.startsWith('image/')) {
-      messageText = `🖼️ ${file.name}`;
-      messageType = 'image';
+      messageText = `🖼️ Image: ${file.name}`;
     } else if (file.type.startsWith('video/')) {
-      messageText = `🎥 ${file.name}`;
+      messageText = `🎥 Video: ${file.name}`;
     } else if (file.type.startsWith('audio/')) {
-      messageText = `🎵 ${file.name}`;
+      messageText = `🎵 Audio: ${file.name}`;
     } else if (file.type.includes('pdf')) {
-      messageText = `📄 ${file.name}`;
+      messageText = `📄 PDF: ${file.name}`;
     } else if (file.type.includes('document') || file.type.includes('text')) {
-      messageText = `📝 ${file.name}`;
+      messageText = `📝 Document: ${file.name}`;
     } else {
-      messageText = `📎 ${file.name}`;
+      messageText = `📎 File: ${file.name}`;
     }
-    
+
     const newMessage: Message = {
       id: Date.now(),
       text: messageText,
       sender: 'user',
       timestamp: new Date(),
-      type: messageType,
+      type: 'file',
       fileName: file.name,
-      fileSize: `${(file.size / 1024).toFixed(1)} KB`
+      fileSize: file.size > 1024 * 1024 
+        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+        : `${(file.size / 1024).toFixed(1)} KB`
     };
     
+    console.log('New message created:', newMessage);
+    
+    // Add message to current messages
     setMessages(prev => [...prev, newMessage]);
     
-    // Update the active chat's messages
-    const updatedActiveChat = {
-      ...activeChat,
-      messages: [...activeChat.messages, newMessage],
-      lastMessage: messageText,
-      timestamp: newMessage.timestamp
-    };
-    
-    setActiveChat(updatedActiveChat);
-    
-    // Update the message in all chats
-    const updatedChats = allChats.map(chat => {
-      if (chat.id === activeChat.id) {
-        return updatedActiveChat;
-      }
-      return chat;
-    });
-    
-    // Update filtered chats to reflect the change
-    setFilteredChats(prev => prev.map(chat => {
-      const updatedChat = updatedChats.find(c => c.id === chat.id);
-      return updatedChat || chat;
-    }));
+    // Close the file upload menu
+    setShowFileUpload(false);
     
     // Simulate a response after file upload
     setTimeout(() => {
       const responses = [
-        "File received! Thanks for sharing 📁",
-        "Got it! Nice file 👍",
-        "Thanks for the upload! 📤",
-        "File looks good! ✅",
-        "Received successfully! 🎉"
+        "Thanks for sharing! 📁",
+        "Got it! 👍",
+        "File received! ✅",
+        "Nice! 🎉"
       ];
       const randomResponse = responses[Math.floor(Math.random() * responses.length)];
       
@@ -448,31 +430,7 @@ function App() {
       };
       
       setMessages(prev => [...prev, responseMessage]);
-      
-      // Update active chat with response
-      const finalUpdatedActiveChat = {
-        ...updatedActiveChat,
-        messages: [...updatedActiveChat.messages, responseMessage],
-        lastMessage: responseMessage.text,
-        timestamp: responseMessage.timestamp
-      };
-      
-      setActiveChat(finalUpdatedActiveChat);
-      
-      // Update all chats with the response
-      const finalUpdatedChats = allChats.map(chat => {
-        if (chat.id === activeChat.id) {
-          return finalUpdatedActiveChat;
-        }
-        return chat;
-      });
-      
-      // Update filtered chats with response
-      setFilteredChats(prev => prev.map(chat => {
-        const updatedChat = finalUpdatedChats.find(c => c.id === chat.id);
-        return updatedChat || chat;
-      }));
-    }, 1000 + Math.random() * 1000);
+    }, 1000);
   };
 
   const handlePlusClick = () => {
@@ -706,7 +664,7 @@ function App() {
                     <p className="leading-relaxed">{message.text}</p>
                     {message.type === 'file' && message.fileName && (
                       <div className="mt-2 text-xs opacity-75">
-                        {message.fileSize}
+                        Size: {message.fileSize}
                       </div>
                     )}
                   </div>
