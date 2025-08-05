@@ -21,36 +21,10 @@ interface Chat {
   timestamp: Date;
   avatar: string;
   unread?: number;
+  messages: Message[];
 }
 
 function App() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: "Hey! How's your day going?",
-      sender: 'other',
-      timestamp: new Date(Date.now() - 300000)
-    },
-    {
-      id: 2,
-      text: "Pretty good! Working on some new designs. The project is coming along nicely and I'm excited to share the progress with you.",
-      sender: 'user',
-      timestamp: new Date(Date.now() - 240000)
-    },
-    {
-      id: 3,
-      text: "That sounds exciting! Can't wait to see them. I've been working on something similar myself.",
-      sender: 'other',
-      timestamp: new Date(Date.now() - 180000)
-    },
-    {
-      id: 4,
-      text: "Really? We should collaborate sometime! 🚀",
-      sender: 'user',
-      timestamp: new Date(Date.now() - 120000)
-    }
-  ]);
-  
   const [allChats] = useState<Chat[]>([
     {
       id: 1,
@@ -58,14 +32,66 @@ function App() {
       lastMessage: "That sounds exciting! Can't wait to see them",
       timestamp: new Date(Date.now() - 180000),
       avatar: 'SJ',
-      unread: 2
+      unread: 2,
+      messages: [
+        {
+          id: 1,
+          text: "Hey! How's your day going?",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 300000)
+        },
+        {
+          id: 2,
+          text: "Pretty good! Working on some new designs. The project is coming along nicely and I'm excited to share the progress with you.",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 240000)
+        },
+        {
+          id: 3,
+          text: "That sounds exciting! Can't wait to see them. I've been working on something similar myself.",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 180000)
+        },
+        {
+          id: 4,
+          text: "Really? We should collaborate sometime! 🚀",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 120000)
+        }
+      ]
     },
     {
       id: 2,
       name: 'Mike Chen',
       lastMessage: 'Thanks for the help earlier!',
       timestamp: new Date(Date.now() - 3600000),
-      avatar: 'MC'
+      avatar: 'MC',
+      messages: [
+        {
+          id: 5,
+          text: "Hi Mike! How did the presentation go?",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 4200000)
+        },
+        {
+          id: 6,
+          text: "It went really well! The client loved the designs.",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 3900000)
+        },
+        {
+          id: 7,
+          text: "That's fantastic! I'm so happy for you 🎉",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 3700000)
+        },
+        {
+          id: 8,
+          text: "Thanks for the help earlier!",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 3600000)
+        }
+      ]
     },
     {
       id: 3,
@@ -73,40 +99,141 @@ function App() {
       lastMessage: 'Meeting at 3 PM tomorrow',
       timestamp: new Date(Date.now() - 7200000),
       avatar: 'DT',
-      unread: 5
+      unread: 5,
+      messages: [
+        {
+          id: 9,
+          text: "Team, we need to finalize the wireframes by Friday",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 8000000)
+        },
+        {
+          id: 10,
+          text: "I've completed the user flow diagrams. Should I share them now?",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 7800000)
+        },
+        {
+          id: 11,
+          text: "Yes, please! That would be great.",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 7500000)
+        },
+        {
+          id: 12,
+          text: "Meeting at 3 PM tomorrow",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 7200000)
+        }
+      ]
     },
     {
       id: 4,
       name: 'Alex Rivera',
       lastMessage: 'Perfect! See you then',
       timestamp: new Date(Date.now() - 86400000),
-      avatar: 'AR'
+      avatar: 'AR',
+      messages: [
+        {
+          id: 13,
+          text: "Want to grab coffee this weekend?",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 90000000)
+        },
+        {
+          id: 14,
+          text: "Absolutely! How about Saturday morning?",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 87000000)
+        },
+        {
+          id: 15,
+          text: "Perfect! See you then",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 86400000)
+        }
+      ]
     },
     {
       id: 5,
       name: 'Emma Wilson',
       lastMessage: 'The files look great',
       timestamp: new Date(Date.now() - 172800000),
-      avatar: 'EW'
+      avatar: 'EW',
+      messages: [
+        {
+          id: 16,
+          text: "I've uploaded the latest mockups to the shared folder",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 180000000)
+        },
+        {
+          id: 17,
+          text: "The files look great",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 172800000)
+        }
+      ]
     },
     {
       id: 6,
       name: 'John Smith',
       lastMessage: 'Let me know when you are free',
       timestamp: new Date(Date.now() - 259200000),
-      avatar: 'JS'
+      avatar: 'JS',
+      messages: [
+        {
+          id: 18,
+          text: "Hey, do you have time to review the contract?",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 270000000)
+        },
+        {
+          id: 19,
+          text: "I'm pretty swamped this week, but I can look at it next week",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 265000000)
+        },
+        {
+          id: 20,
+          text: "Let me know when you are free",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 259200000)
+        }
+      ]
     },
     {
       id: 7,
       name: 'Lisa Brown',
       lastMessage: 'Great work on the presentation!',
       timestamp: new Date(Date.now() - 345600000),
-      avatar: 'LB'
+      avatar: 'LB',
+      messages: [
+        {
+          id: 21,
+          text: "The client presentation is tomorrow. Are you ready?",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 360000000)
+        },
+        {
+          id: 22,
+          text: "Yes! I've been practicing all week. Feeling confident 💪",
+          sender: 'user',
+          timestamp: new Date(Date.now() - 350000000)
+        },
+        {
+          id: 23,
+          text: "Great work on the presentation!",
+          sender: 'other',
+          timestamp: new Date(Date.now() - 345600000)
+        }
+      ]
     }
   ]);
   
   const [inputText, setInputText] = useState('');
   const [activeChat, setActiveChat] = useState(allChats[0]);
+  const [messages, setMessages] = useState<Message[]>(allChats[0].messages);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredChats, setFilteredChats] = useState(allChats);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -138,6 +265,18 @@ function App() {
     }
   }, [searchQuery, allChats]);
 
+  // Update messages when active chat changes
+  useEffect(() => {
+    setMessages(activeChat.messages);
+  }, [activeChat]);
+
+  const handleChatSelect = (chat: Chat) => {
+    setActiveChat(chat);
+    // Clear any unread count when selecting a chat
+    const updatedChat = { ...chat, unread: undefined };
+    setFilteredChats(prev => prev.map(c => c.id === chat.id ? updatedChat : c));
+  };
+
   const handleSendMessage = () => {
     if (inputText.trim()) {
       const newMessage: Message = {
@@ -149,6 +288,25 @@ function App() {
       
       setMessages(prev => [...prev, newMessage]);
       setInputText('');
+      
+      // Update the message in the chat's message history
+      const updatedChats = allChats.map(chat => {
+        if (chat.id === activeChat.id) {
+          return {
+            ...chat,
+            messages: [...chat.messages, newMessage],
+            lastMessage: newMessage.text,
+            timestamp: newMessage.timestamp
+          };
+        }
+        return chat;
+      });
+      
+      // Update filtered chats as well
+      setFilteredChats(prev => prev.map(chat => {
+        const updatedChat = updatedChats.find(c => c.id === chat.id);
+        return updatedChat || chat;
+      }));
       
       // Simulate a response
       setTimeout(() => {
@@ -171,6 +329,25 @@ function App() {
         };
         
         setMessages(prev => [...prev, responseMessage]);
+        
+        // Update the response in the chat's message history
+        const finalUpdatedChats = allChats.map(chat => {
+          if (chat.id === activeChat.id) {
+            return {
+              ...chat,
+              messages: [...chat.messages, newMessage, responseMessage],
+              lastMessage: responseMessage.text,
+              timestamp: responseMessage.timestamp
+            };
+          }
+          return chat;
+        });
+        
+        // Update filtered chats with response
+        setFilteredChats(prev => prev.map(chat => {
+          const updatedChat = finalUpdatedChats.find(c => c.id === chat.id);
+          return updatedChat || chat;
+        }));
       }, 1000 + Math.random() * 1500);
     }
   };
@@ -199,6 +376,25 @@ function App() {
     
     setMessages(prev => [...prev, newMessage]);
     
+    // Update the message in the chat's message history
+    const updatedChats = allChats.map(chat => {
+      if (chat.id === activeChat.id) {
+        return {
+          ...chat,
+          messages: [...chat.messages, newMessage],
+          lastMessage: `📎 ${file.name}`,
+          timestamp: newMessage.timestamp
+        };
+      }
+      return chat;
+    });
+    
+    // Update filtered chats
+    setFilteredChats(prev => prev.map(chat => {
+      const updatedChat = updatedChats.find(c => c.id === chat.id);
+      return updatedChat || chat;
+    }));
+    
     // Simulate response
     setTimeout(() => {
       const responseMessage: Message = {
@@ -208,6 +404,24 @@ function App() {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, responseMessage]);
+      
+      // Update response in chat history
+      const finalUpdatedChats = allChats.map(chat => {
+        if (chat.id === activeChat.id) {
+          return {
+            ...chat,
+            messages: [...chat.messages, newMessage, responseMessage],
+            lastMessage: responseMessage.text,
+            timestamp: responseMessage.timestamp
+          };
+        }
+        return chat;
+      });
+      
+      setFilteredChats(prev => prev.map(chat => {
+        const updatedChat = finalUpdatedChats.find(c => c.id === chat.id);
+        return updatedChat || chat;
+      }));
     }, 1500);
   };
 
@@ -224,6 +438,24 @@ function App() {
     };
     
     setMessages(prev => [...prev, newMessage]);
+    
+    // Update the message in the chat's message history
+    const updatedChats = allChats.map(chat => {
+      if (chat.id === activeChat.id) {
+        return {
+          ...chat,
+          messages: [...chat.messages, newMessage],
+          lastMessage: newMessage.text,
+          timestamp: newMessage.timestamp
+        };
+      }
+      return chat;
+    });
+    
+    setFilteredChats(prev => prev.map(chat => {
+      const updatedChat = updatedChats.find(c => c.id === chat.id);
+      return updatedChat || chat;
+    }));
   };
 
   const handleCall = (type: 'voice' | 'video') => {
@@ -311,7 +543,7 @@ function App() {
             filteredChats.map((chat) => (
               <div
                 key={chat.id}
-                onClick={() => setActiveChat(chat)}
+                onClick={() => handleChatSelect(chat)}
                 className={`p-4 border-b border-gray-100 cursor-pointer transition-colors hover:bg-gray-50 ${
                   activeChat.id === chat.id ? 'bg-blue-50 border-r-2 border-r-blue-500' : ''
                 }`}
